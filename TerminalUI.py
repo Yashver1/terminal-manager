@@ -33,7 +33,6 @@ class TerminalUI():
         curses.cbreak()
         self.screen.keypad(True)
 
-
     def end_ui(self):
         curses.nocbreak()
         self.screen.keypad(False)
@@ -47,7 +46,7 @@ class TerminalUI():
         self.screen.addstr(0,0,"-"*(self.width-1))
         
         while i < self.height - 2: 
-            self.screen.addstr(i,0,f"Option {i//2}: {self.options[i//2]}")
+            self.screen.addstr(i,0,f"{i//2}: {self.options[i//2]}")
             height = i
             i+=2
             
@@ -70,7 +69,7 @@ class TerminalUI():
 
     def end(self,command):
         if command == ord('q'):
-            return 'q'
+            return True
         return
         
 
