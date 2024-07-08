@@ -8,6 +8,7 @@ class TerminalUI():
         self.width = width 
         self.y = y 
         self.x = x
+        self.options = ["Start New Session","View Current Sessions","Delete Session"]
 
     def start_ui(self):
         self.ui_init()
@@ -46,7 +47,7 @@ class TerminalUI():
         self.screen.addstr(0,0,"-"*(self.width-1))
         
         while i < self.height - 2: 
-            self.screen.addstr(i,0,f"Option {i//2}: This is a dummy option\n")
+            self.screen.addstr(i,0,f"Option {i//2}: {self.options[i//2]}")
             height = i
             i+=2
             
@@ -73,7 +74,7 @@ class TerminalUI():
         return
         
 
-ui = TerminalUI(20,40,20,40)
-ui.start_ui()
-ui.ui_end()
+#ui = TerminalUI(8,40,20,40)
+#ui.start_ui()
+#ui.end_ui()
 
