@@ -1,6 +1,5 @@
 import os
 import subprocess
-import pty
 import pickle
 
 
@@ -10,28 +9,31 @@ class TerminalModel():
 
     def __init__(self):
         self.shell = None
-        self.parent = None
-        self.slave = None
 
     def spawn_shell(self):
-        self.master,self.slave = pty.openpty()
         shell = os.environ["SHELL"].split('/')[-1]
-        self.shell = subprocess.Popen([shell],stdin=self.slave,stdout=self.slave,stderr=self.slave)
+        self.shell = subprocess.Popen([shell],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
         print(f"Shell({shell}) Start")
-        return self.master
 
     def close_shell(self):
         if self.shell:
-            self.shell.kill()
+            self.shell.stdin.close()
+            self.shell.terminate()
+            self.shell.wait()
         else:
             raise ValueError("Shell already closed or does not exist")
-        if self.master and self.slave:
-            os.close(self.master)
-            os.close(self.slave)
-        else:
-            raise ValueError("PTY already closed or does not exist")
-        print("Shell Closed")
     
+    def write(self,command):
+        command_encoded = command.encode()
+        self.shell.stdin.write(command_encoded)
+
+    def read(self):
+        output,err = self.shell.communicate()
+        if err:
+            raise ValueError(f"{err}")
+        output_decoded = output.decode()
+        return output_decoded
+
 
     def save_shell(self):
         pass

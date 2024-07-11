@@ -8,14 +8,16 @@ class TerminalController():
     def __init__(self,view):
         self.model = TerminalModel()
         self.view = view
-        self.model_interface = None
 
     def start(self):
-       parent = self.model.spawn_shell()
-       self.view.start_ui()
-       self.model_interface = parent
-       self.menu_read_loop()
-       self.terminal_read_loop()
+        self.model.spawn_shell()
+        self.view.start_ui()
+        self.menu_read_loop()
+        while True:
+            self.terminal_read_loop()
+            self.model.spawn_shell()
+
+
 
     def exit(self):
         self.model.close_shell()
@@ -45,19 +47,17 @@ class TerminalController():
         while True:
             key = self.view.read_key()
             if key == '\n':
+                command+=key
                 break
             if key == curses.KEY_BACKSPACE:
-                command = command[:-2]
-                self.view.screen.refresh()
+                command = comman[:-1]
+                continue
             command+=key
-        os.write(self.model_interface,command.encode('utf-8'))
+        self.model.write(command)
         time.sleep(0.2)
-        output = os.read(self.model_interface,1024)
+        output = self.model.read()
         self.view.screen.clear()
-        if not output:
-            raise ValueError("output not generated")
         self.view.screen.addstr(0,0,output)
-        self.view.screen.refresh()
     
 
             

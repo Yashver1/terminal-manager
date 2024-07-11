@@ -7,7 +7,7 @@ def main():
     view = TerminalUI(8,40,20,40)
     controller = TerminalController(view)
     controller.start()
-
+    controller.exit()
 
 
 

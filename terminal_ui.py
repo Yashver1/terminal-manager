@@ -43,6 +43,7 @@ class TerminalUI():
         self.screen.keypad(False)
         curses.echo()
         curses.endwin()
+        self.screen.refresh()
 
     def render_menu(self):
         self.screen.addstr(0,0,"-"*(self.width-1))
